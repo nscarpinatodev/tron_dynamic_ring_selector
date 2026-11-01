@@ -34,4 +34,4 @@ Foundry duplication/compendium import, or real connected-client update behavior.
 
 The module guards the actual loaded shader's signatures at registration time, but
 the complete Foundry v14 / sf2e 1.6.1 manual checklist still needs to run. No Foundry
-version is marked `verified`. No package publication or hosted release was performed.
+version is marked `verified`. Release publication does not establish in-game compatibility.

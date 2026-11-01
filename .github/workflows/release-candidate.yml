@@ -1,0 +1,64 @@
+name: Release candidate
+
+on:
+  push:
+    tags:
+      - 'v*-rc.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release-candidate tag to publish
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify candidate tag
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          version = json.load(open('module.json'))['version']
+          assert re.fullmatch(r'\d+\.\d+\.\d+-rc\.\d+', version), version
+          assert os.environ['RELEASE_TAG'] == 'v' + version
+          PY
+      - name: Check and package
+        run: |
+          npm test
+          npm run check
+          npm run package
+          python3 tools/verify-release.py
+      - name: Publish GitHub prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          VERSION="${RELEASE_TAG#v}"
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release already exists; refusing to replace its assets."
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" \
+            "dist/tron-identity-rings-${VERSION}.zip" \
+            dist/module.json dist/SHA256SUMS \
+            --verify-tag --prerelease \
+            --title "TRON Identity Rings ${VERSION} — Testing Release Candidate" \
+            --notes-file "docs/RELEASE-${VERSION}.md"

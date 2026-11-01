@@ -1,8 +1,8 @@
 {
   "id": "tron-identity-rings",
-  "title": "TRON Identity Rings",
+  "title": "TRON Identity Rings — 0.1 RC1",
   "description": "Native TRON identity-disc style with illumination-only pulse and explicit, rule-based actor classifications. Foundry canvas integration requires manual validation; not marked verified.",
-  "version": "0.1.0",
+  "version": "0.1.0-rc.1",
   "compatibility": { "minimum": "14.361", "maximum": "14" },
   "relationships": {
     "systems": [{ "id": "sf2e", "type": "system", "compatibility": { "minimum": "1.6.1", "maximum": "1.6.1" } }]

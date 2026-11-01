@@ -1,5 +1,9 @@
 # TRON Identity Rings
 
+**Testing release: 0.1.0-rc.1.** This is the first 0.1 release candidate, intended
+for a disposable test world. Read the [RC1 testing notes](docs/RELEASE-0.1.0-rc.1.md)
+before installing. It is not a verified stable release.
+
 Native Dynamic Token Ring style and campaign classifications for **Foundry v14**
 with **Starfinder Second Edition `sf2e` 1.6.1**. No additional module dependencies.
 
@@ -9,7 +13,7 @@ no `verified` version. Use a test world and the [manual checklist](docs/MANUAL-T
 
 ## Manual installation
 
-1. Extract `tron-identity-rings.zip` into Foundry's user-data `Data/modules` folder,
+1. Extract `tron-identity-rings-0.1.0-rc.1.zip` into Foundry's user-data `Data/modules` folder,
    resulting in `Data/modules/tron-identity-rings/module.json`.
 2. Enable **TRON Identity Rings** in a v14 / `sf2e` 1.6.1 test world.
 3. In core world settings, choose **TRON Identity Rings** as the Dynamic Token Ring
@@ -18,7 +22,8 @@ no `verified` version. Use a test world and the [manual checklist](docs/MANUAL-T
 4. Open a PC/NPC sheet and use **TRON Classification** in its header. Set a
    classification; then place a token. Use the GM bulk preview for existing tokens.
 
-No hosted manifest/download URL has been invented. This is a manual-install package.
+This is a manual-install package. The standalone manifest does not advertise an
+automatic installer or update URL.
 The system release declares Foundry minimum 14.361 / verified 14.369 / maximum 14;
 those are **system declarations**, not this module's runtime verification.
 
@@ -165,7 +170,10 @@ npm run check
 npm run package
 ```
 
-`dist/tron-identity-rings.zip` includes the module directory and required resources.
+`dist/tron-identity-rings-0.1.0-rc.1.zip` includes the module directory and required
+resources. The unversioned ZIP is an identical convenience copy. `dist/SHA256SUMS`
+checksums the versioned ZIP and standalone manifest. Tagged release candidates run
+tests in GitHub Actions before a GitHub prerelease is published.
 Asset rebuilding optionally uses `requirements-assets.txt` and:
 `python3 tools/build-assets.py /path/to/TRON-Identity-Disc-Rings.zip`.
 Uploaded ZIP scripts are never executed.
