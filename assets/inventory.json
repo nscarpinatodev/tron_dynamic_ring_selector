@@ -1,0 +1,101 @@
+{
+  "archiveSha256": "c75e42849731bf3a4f7f598821ab790e729d9c331f1066df345becceb8aa61af",
+  "sources": [
+    {
+      "color": "blue",
+      "member": "TRON-Identity-Disc-Rings/static/identity-disc-blue.png",
+      "sha256": "136fa94b31580b67600d0d45df797b9b5fa34108b03b196386a56f4d571611bc",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "centerAlpha": 0,
+      "cornerAlpha": 0
+    },
+    {
+      "color": "red",
+      "member": "TRON-Identity-Disc-Rings/static/identity-disc-red.png",
+      "sha256": "ce18d54bcb4f8f3d59b62331febc6fab10cf1a3e173905125c80a5fc94f8b7af",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "centerAlpha": 0,
+      "cornerAlpha": 0
+    },
+    {
+      "color": "yellow",
+      "member": "TRON-Identity-Disc-Rings/static/identity-disc-yellow.png",
+      "sha256": "9b020f76616c7a5c954459689b6e645a62ca3523c2bda11ae09deeca84f1e1bd",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "centerAlpha": 0,
+      "cornerAlpha": 0
+    },
+    {
+      "color": "orange",
+      "member": "TRON-Identity-Disc-Rings/static/identity-disc-orange.png",
+      "sha256": "fe48ee259a3c2f8e16fd4e7da5dbfcf6e30952b114a92646878760a1b57d41f1",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "centerAlpha": 0,
+      "cornerAlpha": 0
+    },
+    {
+      "color": "white",
+      "member": "TRON-Identity-Disc-Rings/static/identity-disc-white.png",
+      "sha256": "78d76bb938adb6729a15730290d48dfd6147df0606209d415684759d148de03b",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "centerAlpha": 0,
+      "cornerAlpha": 0
+    },
+    {
+      "color": "green",
+      "member": "TRON-Identity-Disc-Rings/static/identity-disc-green.png",
+      "sha256": "2e7e6e7d8af42d2f722d208acbe8c70192e856396efc09298e082cdb91e5a124",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "centerAlpha": 0,
+      "cornerAlpha": 0
+    },
+    {
+      "color": "teal",
+      "member": "TRON-Identity-Disc-Rings/static/identity-disc-teal.png",
+      "sha256": "786638b71fb42a36a5d68860ad4f26d81fe8a2bb61b075225fe198b2fa287d56",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "centerAlpha": 0,
+      "cornerAlpha": 0
+    },
+    {
+      "color": "purple",
+      "member": "TRON-Identity-Disc-Rings/static/identity-disc-purple.png",
+      "sha256": "d23a2395e23acbbc8c3fcef0284190a545c2500d9bd874ae134eb0c49874a411",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "centerAlpha": 0,
+      "cornerAlpha": 0
+    }
+  ],
+  "sharedDesign": "blue",
+  "maskOffsetUV": [
+    0.30615234375,
+    0
+  ],
+  "darkMetalMaskMax": 0,
+  "transparentPixelMaskMax": 0,
+  "maskedPixels": 266558
+}

@@ -1,0 +1,70 @@
+{
+  "frames": {
+    "tron-ring": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 1254,
+        "h": 1254
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1254,
+        "h": 1254
+      },
+      "sourceSize": {
+        "w": 1254,
+        "h": 1254
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "gridTarget": 1
+    },
+    "tron-ring-bkg": {
+      "frame": {
+        "x": 2508,
+        "y": 0,
+        "w": 1254,
+        "h": 1254
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1254,
+        "h": 1254
+      },
+      "sourceSize": {
+        "w": 1254,
+        "h": 1254
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "TRON Identity Rings",
+    "version": "1",
+    "image": "tron-ring.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 4096,
+      "h": 2048
+    },
+    "scale": "1"
+  },
+  "config": {
+    "defaultColorBand": {
+      "startRadius": 0,
+      "endRadius": 0
+    }
+  }
+}

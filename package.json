@@ -1,0 +1,12 @@
+{
+  "name": "tron-identity-rings",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node tests/core.test.js && node tests/shader.test.js && node tests/renderer.test.js",
+    "check": "node --check scripts/main.js && node --check scripts/core.js && node --check scripts/controller.js && node --check scripts/shader.js && node --check scripts/renderer.js",
+    "package": "python3 tools/package.py"
+  }
+}

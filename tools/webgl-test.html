@@ -1,0 +1,93 @@
+<!doctype html><meta charset="utf-8"><title>TRON isolated shader test</title>
+<pre id="result">RUNNING</pre><canvas id="gpu" width="1254" height="1254"></canvas>
+<script type="module">
+import { ringFunction, pulseGain } from "../scripts/shader.js";
+import { PALETTE } from "../scripts/core.js";
+const result = document.getElementById("result");
+try {
+  const canvas = document.getElementById("gpu");
+  const gl = canvas.getContext("webgl2", { premultipliedAlpha: true, preserveDrawingBuffer: true });
+  if (!gl) throw Error("WebGL2 unavailable");
+  const compile = (kind, source) => {
+    const shader = gl.createShader(kind); gl.shaderSource(shader, source); gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw Error(gl.getShaderInfoLog(shader));
+    return shader;
+  };
+  const vertex = `#version 300 es
+    in vec2 position; out vec2 uv;
+    void main() { uv = position * 0.5 + 0.5; gl_Position = vec4(position, 0.0, 1.0); }`;
+  // Minimal standalone harness for the exact custom ring function. This does not
+  // pretend to be Foundry's primary canvas shader or test its portrait compositing.
+  const fragment = `#version 300 es
+    precision highp float; precision highp int;
+    uniform sampler2D tokenRingTexture; uniform vec3 vRingColor; uniform uint vStates;
+    in vec2 uv; out vec4 finalColor; vec2 vRingTextureCoord;
+    vec3 unpremultiplySafe(vec4 c) { return c.a > 0.0 ? c.rgb/c.a : vec3(0.0); }
+    vec4 tronCoreColorizeTokenRing(vec4 c, float dist) { return c; }
+    ${ringFunction}
+    void main() { vRingTextureCoord = uv * vec2(1254.0/4096.0, 1254.0/2048.0);
+      finalColor = colorizeTokenRing(texture(tokenRingTexture, vRingTextureCoord), 0.0); }`;
+  const program = gl.createProgram(); gl.attachShader(program, compile(gl.VERTEX_SHADER, vertex));
+  gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragment)); gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw Error(gl.getProgramInfoLog(program));
+  gl.useProgram(program);
+  const buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+  const position = gl.getAttribLocation(program, "position"); gl.enableVertexAttribArray(position);
+  gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+  const image = new Image(); image.src = "../assets/tron-ring.png"; await image.decode();
+  const texture = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.uniform1i(gl.getUniformLocation(program, "tokenRingTexture"), 0);
+  const gain = gl.getUniformLocation(program, "tronGain"), color = gl.getUniformLocation(program, "vRingColor");
+  const states = gl.getUniformLocation(program, "vStates");
+  const render = (hex, time, state = 192) => {
+    gl.uniform3f(color, ...hex.match(/[0-9a-f]{2}/gi).map(x => parseInt(x,16)/255));
+    gl.uniform1f(gain, pulseGain(time)); gl.uniform1ui(states, state);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    const pixels = new Uint8Array(1254*1254*4); gl.readPixels(0,0,1254,1254,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+    if (gl.getError()) throw Error("WebGL draw/read error");
+    return pixels;
+  };
+  const sampleCanvas = document.createElement("canvas"); sampleCanvas.width=image.width; sampleCanvas.height=image.height;
+  const ctx=sampleCanvas.getContext("2d"); ctx.drawImage(image,0,0);
+  const source=ctx.getImageData(0,0,1254,1254).data;
+  const mask=ctx.getImageData(1254,0,1254,1254).data;
+  const assert=(condition,message)=>{ if(!condition)throw Error(message); };
+  const reports=[];
+  for(const [name,hex] of Object.entries(PALETTE)) {
+    const peak=render(hex,0), trough=render(hex,1500), seam=render(hex,3000), stopped=render(hex,1500,64);
+    let dark=0, light=0, peakSum=0, troughSum=0;
+    const peakRGB=[0,0,0], troughRGB=[0,0,0];
+    for(let i=0;i<peak.length;i+=4) {
+      assert(peak[i+3]===trough[i+3], `${name}: animated alpha`);
+      assert(peak[i+3]===source[i+3], `${name}: source alpha changed`);
+      for(let c=0;c<4;c++) {
+        assert(peak[i+c]===seam[i+c], `${name}: broken 3s seam`);
+        assert(peak[i+c]===stopped[i+c], `${name}: disabled animation changes appearance`);
+      }
+      if(source[i+3]>250 && Math.max(source[i],source[i+1],source[i+2])<=90) {
+        dark++;
+        assert(mask[i]===0,`${name}: dark housing masked`);
+        for(let c=0;c<3;c++)assert(peak[i+c]===trough[i+c],`${name}: housing changed`);
+      }
+      if(source[i+3]>250 && mask[i]>250) {
+        light++; peakSum+=peak[i]+peak[i+1]+peak[i+2]; troughSum+=trough[i]+trough[i+1]+trough[i+2];
+        for(let c=0;c<3;c++){peakRGB[c]+=peak[i+c];troughRGB[c]+=trough[i+c];}
+      }
+      if(source[i+3]===0)assert(peak[i+3]===0,`${name}: transparency lost`);
+    }
+    assert(dark>10000 && light>10000, `${name}: insufficient sample pixels`);
+    const ratio=troughSum/peakSum; assert(Math.abs(ratio-0.55)<0.015,`${name}: pulse gain ${ratio}`);
+    const chroma=rgb=>{const lo=Math.min(...rgb),hi=Math.max(...rgb);return hi===lo?[0,0,0]:rgb.map(v=>(v-lo)/(hi-lo));};
+    const peakHue=chroma(peakRGB),troughHue=chroma(troughRGB);
+    const hueError=Math.max(...peakHue.map((v,c)=>Math.abs(v-troughHue[c])));
+    assert(hueError<0.02,`${name}: illumination hue changed`);
+    reports.push({name,darkPixels:dark,lightPixels:light,troughPeakRatio:ratio,hueError});
+  }
+  result.textContent=JSON.stringify({status:"PASS",scope:"Standalone custom ring function on WebGL2; not Foundry integration",reports},null,2);
+} catch(error) { result.textContent=JSON.stringify({status:"FAIL",error:String(error),stack:error.stack}); }
+</script>

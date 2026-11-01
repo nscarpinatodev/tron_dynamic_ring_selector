@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "scope": "Standalone custom ring function on WebGL2; not Foundry integration",
+  "reports": [
+    {
+      "name": "protector",
+      "darkPixels": 233099,
+      "lightPixels": 185057,
+      "troughPeakRatio": 0.5504263604327896,
+      "hueError": 0.0010262607359947662
+    },
+    {
+      "name": "loyalist",
+      "darkPixels": 233099,
+      "lightPixels": 185057,
+      "troughPeakRatio": 0.5502144832538034,
+      "hueError": 0.0013415491090235307
+    },
+    {
+      "name": "search",
+      "darkPixels": 233099,
+      "lightPixels": 185057,
+      "troughPeakRatio": 0.550104205823106,
+      "hueError": 0.0016636827678367938
+    },
+    {
+      "name": "corrupted",
+      "darkPixels": 233099,
+      "lightPixels": 185057,
+      "troughPeakRatio": 0.5505511016084461,
+      "hueError": 0.0002306895789271901
+    },
+    {
+      "name": "iso",
+      "darkPixels": 233099,
+      "lightPixels": 185057,
+      "troughPeakRatio": 0.550430543405547,
+      "hueError": 0
+    },
+    {
+      "name": "military",
+      "darkPixels": 233099,
+      "lightPixels": 185057,
+      "troughPeakRatio": 0.5502086236866608,
+      "hueError": 0.00036246546466314755
+    },
+    {
+      "name": "outland",
+      "darkPixels": 233099,
+      "lightPixels": 185057,
+      "troughPeakRatio": 0.5499047425592614,
+      "hueError": 0.000682365138988561
+    },
+    {
+      "name": "utility",
+      "darkPixels": 233099,
+      "lightPixels": 185057,
+      "troughPeakRatio": 0.5501686604373088,
+      "hueError": 0.001019393984040995
+    }
+  ],
+  "testedAt": "2026-11-01T22:44:29.935Z",
+  "browser": "Chrome/154.0.8037.57",
+  "shaderSha256": "acc7aec38e98e32f3e218eba4296a8937c6392d07667a944699829acd1c47ac2",
+  "atlasSha256": "8fec42b461aceca07943d02327bda9f8373706841c25f105f311f09cf2f371b0"
+}
