@@ -21,12 +21,15 @@ try {
   const fragment = `#version 300 es
     precision highp float; precision highp int;
     uniform sampler2D tokenRingTexture; uniform vec3 vRingColor; uniform uint vStates;
+    uniform vec2 testRange; uniform vec4 testFrame; uniform bool testBackground;
     in vec2 uv; out vec4 finalColor; vec2 vRingTextureCoord;
     vec3 unpremultiplySafe(vec4 c) { return c.a > 0.0 ? c.rgb/c.a : vec3(0.0); }
     vec4 tronCoreColorizeTokenRing(vec4 c, float dist) { return c; }
     ${ringFunction}
-    void main() { vRingTextureCoord = uv * vec2(1254.0/4096.0, 1254.0/2048.0);
-      finalColor = colorizeTokenRing(texture(tokenRingTexture, vRingTextureCoord), 0.0); }`;
+    void main() { vec2 localUV = mix(vec2(testRange.x), vec2(testRange.y), uv);
+      vRingTextureCoord = testFrame.xy + localUV * testFrame.zw;
+      vec4 sampled = texture(tokenRingTexture, vRingTextureCoord);
+      finalColor = testBackground ? sampled : colorizeTokenRing(sampled, 0.0); }`;
   const program = gl.createProgram(); gl.attachShader(program, compile(gl.VERTEX_SHADER, vertex));
   gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragment)); gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw Error(gl.getProgramInfoLog(program));
@@ -44,6 +47,11 @@ try {
   gl.uniform1i(gl.getUniformLocation(program, "tokenRingTexture"), 0);
   const gain = gl.getUniformLocation(program, "tronGain"), color = gl.getUniformLocation(program, "vRingColor");
   const states = gl.getUniformLocation(program, "vStates");
+  const range = gl.getUniformLocation(program, "testRange");
+  const frame = gl.getUniformLocation(program, "testFrame");
+  const background = gl.getUniformLocation(program, "testBackground");
+  gl.uniform2f(range,0,1); gl.uniform4f(frame,0,0,1254/4096,1254/2048);
+  gl.uniform1i(background,0);
   const render = (hex, time, state = 192) => {
     gl.uniform3f(color, ...hex.match(/[0-9a-f]{2}/gi).map(x => parseInt(x,16)/255));
     gl.uniform1f(gain, pulseGain(time)); gl.uniform1ui(states, state);
@@ -71,10 +79,10 @@ try {
       }
       if(source[i+3]>250 && Math.max(source[i],source[i+1],source[i+2])<=90) {
         dark++;
-        assert(mask[i]===0,`${name}: dark housing masked`);
+        assert(mask[i+3]===0,`${name}: dark housing masked`);
         for(let c=0;c<3;c++)assert(peak[i+c]===trough[i+c],`${name}: housing changed`);
       }
-      if(source[i+3]>250 && mask[i]>250) {
+      if(source[i+3]>250 && mask[i+3]>250) {
         light++; peakSum+=peak[i]+peak[i+1]+peak[i+2]; troughSum+=trough[i]+trough[i+1]+trough[i+2];
         for(let c=0;c<3;c++){peakRGB[c]+=peak[i+c];troughRGB[c]+=trough[i+c];}
       }
@@ -88,6 +96,30 @@ try {
     assert(hueError<0.02,`${name}: illumination hue changed`);
     reports.push({name,darkPixels:dark,lightPixels:light,troughPeakRatio:ratio,hueError});
   }
-  result.textContent=JSON.stringify({status:"PASS",scope:"Standalone custom ring function on WebGL2; not Foundry integration",reports},null,2);
+  // Minification and UV scale correction expose neighboring atlas cells. A
+  // 1:1 nearest-neighbor test alone does not exercise these sampling seams.
+  const sheet=await (await fetch('../assets/tron-ring.json')).json();
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  const edgeReports=[];
+  gl.generateMipmap(gl.TEXTURE_2D);
+  for(const filter of [gl.LINEAR,gl.LINEAR_MIPMAP_LINEAR])
+  for(const size of [64,128,256]) for(const state of [0,64,192]) for(const isBackground of [false,true]) {
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,filter);
+    gl.viewport(0,0,size,size); gl.uniform2f(range,-0.15,1.15);
+    const f=sheet.frames[isBackground?'tron-ring-bkg':'tron-ring'].frame;
+    gl.uniform4f(frame,f.x/4096,f.y/2048,f.w/4096,f.h/2048);
+    gl.uniform1i(background,isBackground?1:0);
+    const sample=render('#ff3038',1500,state);
+    let nontransparent=0;
+    for(let y=0;y<size;y++) for(let x=0;x<size;x++) {
+      if(isBackground || x===0 || y===0 || x===size-1 || y===size-1) {
+        if(sample[(y*1254+x)*4+3]!==0)nontransparent++;
+      }
+    }
+    assert(nontransparent===0,`Atlas border: size=${size}, state=${state}, background=${isBackground}, opaque pixels=${nontransparent}`);
+    edgeReports.push({filter:filter===gl.LINEAR?'linear':'mipmap',size,state,background:isBackground,nontransparent});
+  }
+  result.textContent=JSON.stringify({status:"PASS",scope:"Standalone custom ring function on WebGL2; not Foundry integration",reports,edgeReports},null,2);
 } catch(error) { result.textContent=JSON.stringify({status:"FAIL",error:String(error),stack:error.stack}); }
 </script>

@@ -23,6 +23,10 @@ policy. See SOURCE-INSPECTION.md for the exact current source/declaration eviden
 - WebGL test records the browser version and exact shader/atlas hashes in
   `webgl-results.json`. The local fixture server/browser are closed after testing.
 - Manual-install archive layout and ZIP integrity are checked by `tools/package.py`.
+- RC3 reproduces RC2's atlas-edge failure and adds 36 scaled-UV edge checks using
+  linear and mipmapped filtering at 64/128/256 pixels. Border/background pixels
+  remain transparent in all cases after the fix. The test now records the native
+  spritesheet JSON hash as well as the shader and atlas PNG hashes.
 
 ## Not established by those tests
 

@@ -1,7 +1,7 @@
 # TRON Identity Rings
 
-**Testing release: 0.1.0-rc.2.** This is the second 0.1 release candidate, intended
-for a disposable test world. Read the [RC2 testing notes](docs/RELEASE-0.1.0-rc.2.md)
+**Testing release: 0.1.0-rc.3.** This is the third 0.1 release candidate, intended
+for a disposable test world. Read the [RC3 testing notes](docs/RELEASE-0.1.0-rc.3.md)
 before installing. It is not a verified stable release.
 
 Native Dynamic Token Ring style and campaign classifications for **Foundry v14**
@@ -27,7 +27,7 @@ Back up the world first; this does not require deleting the world.
 
 ## Manual installation
 
-1. Extract `tron-identity-rings-0.1.0-rc.2.zip` into Foundry's user-data `Data/modules` folder,
+1. Extract `tron-identity-rings-0.1.0-rc.3.zip` into Foundry's user-data `Data/modules` folder,
    resulting in `Data/modules/tron-identity-rings/module.json`.
 2. Enable **TRON Identity Rings** in a v14 / `sf2e` 1.6.1 test world.
 3. In core world settings, choose **TRON Identity Rings** as the Dynamic Token Ring
@@ -185,7 +185,7 @@ npm run check
 npm run package
 ```
 
-`dist/tron-identity-rings-0.1.0-rc.2.zip` includes the module directory and required
+`dist/tron-identity-rings-0.1.0-rc.3.zip` includes the module directory and required
 resources. The unversioned ZIP is an identical convenience copy. `dist/SHA256SUMS`
 checksums the versioned ZIP and standalone manifest. Tagged release candidates run
 tests in GitHub Actions before a GitHub prerelease is published.

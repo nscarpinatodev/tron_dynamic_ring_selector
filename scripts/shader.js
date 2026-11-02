@@ -26,9 +26,13 @@ export function buildFragment(source) {
 export const ringFunction = `
 uniform float tronGain;
 vec4 colorizeTokenRing(in vec4 tronRing, in float tronDist) {
+  // Native UV scale correction can move beyond the sprite's atlas rectangle.
+  // Clip before both the managed and core paths so auxiliary cells never draw.
+  if (any(lessThan(vRingTextureCoord, vec2(0.0))) ||
+      any(greaterThan(vRingTextureCoord, vec2(1254.0 / 4096.0, 1254.0 / 2048.0)))) return vec4(0.0);
   if ((vStates & ${MANAGED}U) == 0U) return tronCoreColorizeTokenRing(tronRing, tronDist);
   vec3 base = unpremultiplySafe(tronRing);
-  float lightMask = texture(tokenRingTexture, vRingTextureCoord + vec2(${MASK_OFFSET}, 0.0)).r;
+  float lightMask = texture(tokenRingTexture, vRingTextureCoord + vec2(${MASK_OFFSET}, 0.0)).a;
   float luminance = max(base.r, max(base.g, base.b));
   float gain = ((vStates & ${ANIMATED}U) != 0U) ? tronGain : 1.0;
   vec3 neutral = vec3(min(base.r, min(base.g, base.b)));

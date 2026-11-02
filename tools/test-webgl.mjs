@@ -72,6 +72,7 @@ try {
   report.browser = (await call("Browser.getVersion")).product;
   report.shaderSha256 = createHash("sha256").update(await readFile(resolve(root, "scripts/shader.js"))).digest("hex");
   report.atlasSha256 = createHash("sha256").update(await readFile(resolve(root, "assets/tron-ring.png"))).digest("hex");
+  report.sheetSha256 = createHash("sha256").update(await readFile(resolve(root, "assets/tron-ring.json"))).digest("hex");
   console.log(JSON.stringify(report, null, 2));
   await writeFile(resolve(root, "docs/webgl-results.json"), JSON.stringify(report, null, 2) + "\n");
   if (report.status !== "PASS") process.exitCode = 1;

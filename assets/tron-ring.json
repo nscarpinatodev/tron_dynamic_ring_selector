@@ -27,22 +27,22 @@
     },
     "tron-ring-bkg": {
       "frame": {
-        "x": 2508,
-        "y": 0,
-        "w": 1254,
-        "h": 1254
+        "x": 4000,
+        "y": 1900,
+        "w": 1,
+        "h": 1
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 1254,
-        "h": 1254
+        "w": 1,
+        "h": 1
       },
       "sourceSize": {
-        "w": 1254,
-        "h": 1254
+        "w": 1,
+        "h": 1
       },
       "anchor": {
         "x": 0.5,

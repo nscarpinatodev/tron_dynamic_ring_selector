@@ -34,6 +34,8 @@ with zipfile.ZipFile(archive_path) as archive:
     assert not any(name.endswith('.webm') for name in names)
 report = json.loads((root / 'docs/webgl-results.json').read_text())
 assert report['status'] == 'PASS' and len(report['reports']) == 8
-for filename, key in [('scripts/shader.js', 'shaderSha256'), ('assets/tron-ring.png', 'atlasSha256')]:
+assert len(report['edgeReports']) == 36
+assert all(case['nontransparent'] == 0 for case in report['edgeReports'])
+for filename, key in [('scripts/shader.js', 'shaderSha256'), ('assets/tron-ring.png', 'atlasSha256'), ('assets/tron-ring.json', 'sheetSha256')]:
     assert hashlib.sha256((root / filename).read_bytes()).hexdigest() == report[key]
 print(f'{version}: metadata, ZIP contents, checksums and unchanged GPU-tested artifacts verified.')

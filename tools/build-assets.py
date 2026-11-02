@@ -41,7 +41,9 @@ expanded = np.asarray(Image.fromarray(np.round(seed * 255).astype(np.uint8)).fil
 mask = expanded * np.clip((brightness - 90) / 70, 0, 1)
 mask[pixels[:, :, 3] == 0] = 0
 mask_bytes = np.round(mask * 255).astype(np.uint8)
-mask_image = Image.fromarray(np.dstack([mask_bytes] * 3 + [np.full(mask_bytes.shape, 255, dtype=np.uint8)]))
+# Store scalar coverage in alpha, not opaque grayscale RGB. An auxiliary data
+# cell must not become an opaque rectangle when native filtering reaches it.
+mask_image = Image.fromarray(np.dstack([np.where(mask_bytes > 0, 255, 0).astype(np.uint8)] * 3 + [mask_bytes]))
 
 atlas = Image.new("RGBA", (4096, 2048))
 atlas.paste(image, (0, 0))  # paste without alpha mask: preserve every RGBA byte
@@ -60,7 +62,11 @@ def frame(x, **extra):
 
 # Only the ring has gridTarget, so there is one native size entry. Core selects
 # the nearest supported entry for every grid size; all sizes share this design.
-sheet = {"frames": {"tron-ring": frame(0, gridTarget=1), "tron-ring-bkg": frame(2508)},
+background = {"frame": {"x": 4000, "y": 1900, "w": 1, "h": 1},
+              "rotated": False, "trimmed": False,
+              "spriteSourceSize": {"x": 0, "y": 0, "w": 1, "h": 1},
+              "sourceSize": {"w": 1, "h": 1}, "anchor": {"x": 0.5, "y": 0.5}}
+sheet = {"frames": {"tron-ring": frame(0, gridTarget=1), "tron-ring-bkg": background},
          "meta": {"app": "TRON Identity Rings", "version": "1", "image": "tron-ring.png",
                   "format": "RGBA8888", "size": {"w": 4096, "h": 2048}, "scale": "1"},
          "config": {"defaultColorBand": {"startRadius": 0, "endRadius": 0}}}

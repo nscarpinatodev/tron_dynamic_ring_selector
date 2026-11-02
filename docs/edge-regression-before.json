@@ -1,0 +1,9 @@
+{
+  "status": "FAIL",
+  "error": "Error: Atlas border: size=64, state=0, background=false, opaque pixels=50",
+  "stack": "Error: Atlas border: size=64, state=0, background=false, opaque pixels=50\n    at assert (http://127.0.0.1:38503/tools/webgl-test.html:67:59)\n    at http://127.0.0.1:38503/tools/webgl-test.html:117:5",
+  "testedAt": "2026-11-02T00:54:36.781Z",
+  "browser": "Chrome/154.0.8037.57",
+  "shaderSha256": "acc7aec38e98e32f3e218eba4296a8937c6392d07667a944699829acd1c47ac2",
+  "atlasSha256": "8fec42b461aceca07943d02327bda9f8373706841c25f105f311f09cf2f371b0"
+}

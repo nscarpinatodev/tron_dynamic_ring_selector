@@ -62,3 +62,6 @@ Keep a world backup. These checks validate the provided renderer inside Foundry.
   without the module's managed marker use core coloring/effects with the TRON design.
 - Watch document traffic and browser errors with many tokens for several cycles.
   Canvas animation must not write actor/token documents at all.
+- RC3 border regression: reload module assets, zoom out/in at different token sizes,
+  and check all four sides of the image for rectangular edges with pulse on/off.
+  Check unmarked native rings too. Transparent background areas must stay clear.

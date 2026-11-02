@@ -5,7 +5,8 @@ executed. The eight PNG members were inspected and hashed in `inventory.json`.
 
 - `tron-ring.png`: 4096×2048 lossless shared atlas. First 1254×1254 frame is the
   unchanged blue source, including its original RGBA bytes. Second frame is the
-  derived illumination mask; third is a transparent native background frame.
+  derived illumination mask in alpha. The background is a separate 1×1 transparent
+  frame surrounded by empty atlas pixels, away from all artwork and mask data.
 - `tron-ring.json`: native/Pixi spritesheet metadata, one gridTarget entry with
   a paired `-bkg` frame. Other token sizes use core's nearest-size behavior.
 - `source-blue.png`: source inspection aid, not an additional portrait texture.
