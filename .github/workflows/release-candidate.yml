@@ -62,3 +62,11 @@ jobs:
             --verify-tag --prerelease \
             --title "TRON Identity Rings ${VERSION} — Testing Release Candidate" \
             --notes-file "docs/RELEASE-${VERSION}.md"
+      - name: Verify published Foundry installation
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+          RELEASE_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 tools/verify-install.py \
+            "https://github.com/${RELEASE_REPOSITORY}/releases/download/${RELEASE_TAG}/module.json" \
+            --expected-version "${RELEASE_TAG#v}"

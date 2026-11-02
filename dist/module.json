@@ -1,14 +1,43 @@
 {
   "id": "tron-identity-rings",
-  "title": "TRON Identity Rings — 0.1 RC1",
+  "title": "TRON Identity Rings \u2014 0.1 RC2",
   "description": "Native TRON identity-disc style with illumination-only pulse and explicit, rule-based actor classifications. Foundry canvas integration requires manual validation; not marked verified.",
-  "version": "0.1.0-rc.1",
-  "compatibility": { "minimum": "14.361", "maximum": "14" },
-  "relationships": {
-    "systems": [{ "id": "sf2e", "type": "system", "compatibility": { "minimum": "1.6.1", "maximum": "1.6.1" } }]
+  "version": "0.1.0-rc.2",
+  "compatibility": {
+    "minimum": "14.361",
+    "maximum": "14"
   },
-  "authors": [{ "name": "TRON Identity Rings contributors" }],
-  "esmodules": ["scripts/main.js"],
-  "styles": ["styles/tron.css"],
-  "languages": [{ "lang": "en", "name": "English", "path": "lang/en.json" }]
+  "relationships": {
+    "systems": [
+      {
+        "id": "sf2e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "1.6.1",
+          "maximum": "1.6.1"
+        }
+      }
+    ]
+  },
+  "authors": [
+    {
+      "name": "TRON Identity Rings contributors"
+    }
+  ],
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/tron.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "url": "https://github.com/nscarpinatodev/tron_dynamic_ring_selector",
+  "manifest": "https://raw.githubusercontent.com/nscarpinatodev/tron_dynamic_ring_selector/main/module.json",
+  "download": "https://github.com/nscarpinatodev/tron_dynamic_ring_selector/raw/refs/tags/v0.1.0-rc.2/dist/tron-identity-rings-0.1.0-rc.2.zip"
 }

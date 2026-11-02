@@ -4,10 +4,12 @@ import json
 import re
 import zipfile
 from pathlib import Path
+from release_contract import validate_manifest
 
 root = Path(__file__).resolve().parents[1]
 manifest = json.loads((root / 'module.json').read_text())
 version = manifest['version']
+validate_manifest(manifest)
 assert re.fullmatch(r'\d+\.\d+\.\d+-rc\.\d+', version)
 assert json.loads((root / 'package.json').read_text())['version'] == version
 assert 'verified' not in manifest['compatibility']

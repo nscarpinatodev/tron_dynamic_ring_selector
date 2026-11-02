@@ -4,9 +4,11 @@ import hashlib
 import shutil
 from pathlib import Path
 import zipfile
+from release_contract import validate_manifest
 
 root = Path(__file__).resolve().parents[1]
 manifest = json.loads((root / "module.json").read_text())
+validate_manifest(manifest)
 files = [root / "module.json", root / "README.md"]
 for directory in ("scripts", "styles", "lang", "docs", "assets"):
     files += sorted(path for path in (root / directory).rglob("*") if path.is_file())
